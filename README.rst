@@ -1,5 +1,5 @@
 ==================
-gstudio: Gnowledge Studio
+GStudio: Gnowledge Studio
 ==================
 
 A collaborative workspace for constructing and publishing semantic
