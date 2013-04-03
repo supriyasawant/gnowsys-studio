@@ -197,7 +197,7 @@ function moveDown() {
 	  
 		    
        });
-	$(".addtodrawer").click(function(){
+	 $(document).on('click',".addtodrawer",function(){
 //	alert("test");
 	  
 	  // var ptitle=document.getElementById("ptitle").value;
