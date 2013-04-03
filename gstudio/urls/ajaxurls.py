@@ -35,4 +35,7 @@ urlpatterns = patterns('gstudio.views.ajaxviews',
                        url(r'^iswiki/$', 'IsWiki', name='ajax_view_iswiki'),
                        url(r'^deletepriorpage/$', 'ajaxDeletePriorpage', name='ajax_delete_priorpage'),
                        url(r'^addresponsestotwist/$', 'ajaxAddResponsesToTwist', name='ajax_addresponsestotwist'),
+		       url(r'^userListForInvitation/$', 'ajaxuserListForInvitation', name='ajax_userListForInvitation'),
+                       url(r'^sendInvitation/$', 'ajaxSendInvitation', name='ajax_SendInvitation'),
+                       url(r'^releaseBlockResponseOfTwist/$', 'ajaxReleaseBlockResponseOfTwist', name='ajax_ReleaseBlockResponseOfTwist'),
                        )
