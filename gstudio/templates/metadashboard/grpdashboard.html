@@ -14,18 +14,12 @@ function showloomstatus()
 ajurl="/gstudio/resources/loom/status/"+{{meet_ob.id}}
 $.ajax({
         url: ajurl,
-        beforeSend: function() {
-              $("#ajax_load_image").show();
-              $("#content").css({"opacity":"0.1",})
-                               },
+       
         success: function(data){
                 $("#status").html(data);
                                },
         complete: function(){
-                $("#ajax_load_image").hide();
-                $("#content").css({"opacity":"",})
-
-                isResponse=false;
+                       isResponse=false;
                             }
 });
 }
@@ -33,11 +27,13 @@ $.ajax({
 
 
 <script type="text/javascript" >
-//This script is about fold and unfold twist of the loom
+//this will show loom status and refresh it
 $(window).load(function() {
 $("#showstatus").trigger('click');
 $(".divHide").hide();
-});
+});w
+//This script is about fold and unfold twist of the loom
+/*
 $(document).ready(function() {
 $(".titleShowClass").click(function(){
 //$(this).attr('class','titleHideClass');
@@ -45,7 +41,7 @@ var divid=$(this).attr("id");
 $(".img"+divid).toggle();
 $("#twist"+divid).slideToggle('slow');
  });
-});
+});*/
 </script>
     <script type="text/javascript" >
       $(window).load(function() {
@@ -459,142 +455,22 @@ $.ajax({
 </br>   {% autoescape off %}
    {% for each in topic %}
       	<h4>
+<a href="/gstudio/group/twist/{{each.id}}" style="text-decoration:none">
+<font size ="5" >{{each.title}}</font></a>
+<!--
 <a style="text-decoration:none" id="{{ each.id}}" class="titleShowClass">
-<font size ="5" >{{each.title}}</font>
+<font size ="5" >{{each.title}}</font>!-->
+<!--
 <img src="/static/gstudio/img/Plus.png" class="img{{ each.id}}">
-<img src="/static/gstudio/img/Minus.png" class="img{{ each.id}}" style="display: none" ></a>
+<img src="/static/gstudio/img/Minus.png" class="img{{ each.id}}" style="display: none" >!-->
 <!--&nbsp;[ <a href="{{ each.get_absolute_url }}" title="{{ each.title }}" rel="bookmark">Show Graph</a> ]-->
 <!--
 <input type="button" id="fold{{ each.id}}" value="{{ each.id}}" class="twistHideClass" style="background:url(/static/gstudio/img/fold.png) no-repeat;box-shadow:none"/>
 <input type="button" id="unfold{{ each.id}}" value="{{ each.id}}" class="twistShowClass" style="background:url(/static/gstudio/img/unfold.png) no-repeat;box-shadow:none;"/>!-->
 </h4>
-<div id="twist{{ each.id}}" class="divHide">
-      		Posted on : {{each.creation_date}}
-		by : 
-   		{% for author in each.authors.all %} 
-   			{{author}}
-   		{% endfor %}</br>
-     		<!-- Current rating is <h5>{{ each.rating.get_rating }}</h5> -->
-   	{%autoescape on%}
-		{% with each.html_content|safe as each_content %}
-		<font size ="3" > {{each_content}} </font>
-		{% endwith %}
-	{% endautoescape%}
-	<div>
-		<div class="intimateSubscribers_{{each.id}}" style="display:none;margin-bottom:-5px;margin-left:11px">
-			<br/>
-			<p  class="pintimateSubscribers" ><b>Would you like to intimate the subscribers about the edit? </b><p>
-			<input type="radio" name="intimate_{{each.id}}" class="intimateSubscribers" value="Yes"><b>Yes</b> &nbsp;
-			<input type="radio" name="intimate_{{each.id}}" class="intimateSubscribers" value="No" checked="checked"><b>No</b>
-		</div>
-	<form  name="response_to_{{each.id}}" id="response_to_{{each.id}}" method="post" action=".">{% csrf_token %}
-                
-    		<input type="hidden" class="reptext" id="topictext{{ each.id }}" name = "reply" style="display:none">
-	<input type="hidden" id="hidden{{ each.id }}" value="{{ each.id }}" name ="hiddenid">
-		 <input type="hidden" id="commentdata{{each.id}}" value='{{each.content_org}}'>
-	        <input type="hidden" value={{user.username}} name = "usr">
-    		<input type="hidden" value="{{each.id}}" name = "iden">
-	    	<input type="hidden" value="{{user.id}}" name = "idusr">
-			{% if user.is_authenticated %}
-		 <input type="button" class="editcontent" name=""  id="{{each.id}}" value="Edit">
-<!-- start of  release and block the response  of twist -->
-   {% for author in each.authors.all %} 
-   	{% ifequal author.id  user.id %}
-		{% if each.subject_of.all %}
-		 {% for attribute in each.subject_of.all %}
-				{% ifequal attribute.attributetype.title "release" %}
-					{% ifequal attribute.svalue "true"%}
-					 <input type="button" class="twistReleaseBlockResponse" id="twistReleaseBlockResponse_{{each.id}}" value="Block Responses" onclick="twistReleaseBlockResponseFunction('{{each.id}}','false')">
-					{% else %}
-					 <input type="button" class="twistReleaseBlockResponse" id="twistReleaseBlockResponse_{{each.id}}" value="Release Responses" onclick="twistReleaseBlockResponseFunction('{{each.id}}','true')">
-					{% endifequal%}
-				{% endifequal %}
-		{% endfor %}
-		{% else %}
-				 <input type="button" class="twistReleaseBlockResponse" id="twistReleaseBlockResponse_{{each.id}}" value="Block Responses" onclick="twistReleaseBlockResponseFunction('{{each.id}}','false')">
-		{% endif %}
-	 {% else %}
-	{% if user.is_superuser %}
-		{% if each.subject_of.all %}
-		{% for attribute in each.subject_of.all %}
-				{% ifequal attribute.attributetype.title "release" %}
-					{% ifequal attribute.svalue "true"%}
-					 <input type="button" class="twistReleaseBlockResponse" id="twistReleaseBlockResponse_{{each.id}}" value="Block Responses" onclick="twistReleaseBlockResponseFunction('{{each.id}}','false')">
-					{% else %}
-					 <input type="button" class="twistReleaseBlockResponse" id="twistReleaseBlockResponse_{{each.id}}" value="Release Responses" onclick="twistReleaseBlockResponseFunction('{{each.id}}','true')">
-					{% endifequal%}
-				{% endifequal %}
-		{% endfor %}
-		{% else %}
-				 <input type="button" class="twistReleaseBlockResponse" id="twistReleaseBlockResponse_{{each.id}}" value="Block Responses" onclick="twistReleaseBlockResponseFunction('{{each.id}}','false')">
-		{% endif %}
-	{% endif %}
-	{% endifequal %}
-   {% endfor %}
-<!-- end of  release and block the response  of twist -->
 
-		 <input type="button" class="editor" id="{{ each.id }}" value="Add Response"/>
-		 <input type="hidden" class="editval" id="edit{{each.id}}" name="edit" value="empty">
-                <input type="button" class="savecontent" id="save{{ each.id }}" value="Save" onclick="topicsaveclick(document.getElementById('hidden{{ each.id }}').value)"><br/>
-              
-	        <input type="submit" class="submitresponse" id="topicsubmit{{ each.id }}" value="Submit"></br>
-			{% endif %}
-		{% ifequal user.id admin_id %}		
-		<input class="topicchk" id="chk{{ each.id }}" name="del_topic" type="checkbox" value="delete_topic"/>
-		<input type="submit" class="topicdelete" id="delete{{ each.id }}" value="Delete the twist"></br>
-		{% else %}
-   		{% for author in each.authors.all %} 
-   			{% ifequal user.id author.id %}
-		<input class="topicchk" id="chk{{ each.id }}" name="del_topic" type="checkbox" value="delete_topic"/>
-		<input type="submit" class="topicdelete" id="delete{{ each.id }}" value="Delete the twist"></br>
-			{% endifequal %}
-   		{% endfor %}
 
-		{% endifequal %}
-  
-         <!--	Rate this ? </br>
-		<input name="star1" type="radio" value=1 class="star"/>
-		<input name="star1" type="radio" value=2 class="star"/>
-		<input name="star1" type="radio" value=3 class="star"/>
-		<input name="star1" type="radio" value=4 class="star"/>
-		<input name="star1" type="radio" value=5 class="star"/>
-		<!--topic id and user id hidden fields
-		</br>
-		<input type="submit" value="Rate it!!!">  -->
-         </form>
-	</div>   
 
-<!--ADDING AND DISPLAY TAG-->
-{% addtag each each.id user %}
-
-	<br/>
-        <p>
-	 Responses :
-	<!--	<div id="main">
-	<div id="sidetree">
-	<div class="treeheader">&nbsp;</div>
- 	<a href="?#">Expand All</a> </div>-->
-	<!--<ul class="treeview" id="tree">
- 	<li class="expandable"><div class="hitarea expandable-hitarea"></div>Expand the replies</li>-->
-<div id="response{{each.id}}">
-{% if user.is_superuser %}
-         {% show_comment each user.id flag1 admin_id "true"  %}
-{% else %}
-{% if each.subject_of.all %}
-	 {% for twistattribute in each.subject_of.all %}
-		{% ifequal twistattribute.attributetype.title "release" %}
-		         {% show_comment each user.id flag1 admin_id twistattribute.svalue  %}
-		{% else %}
-			 {% show_comment each user.id flag1 admin_id "false"  %}
-		{% endifequal %}
-	{% endfor %}
-{% else %}
-{% show_comment each user.id flag1 admin_id "true"  %}
-{% endif %}
-{% endif %}
-
-</div>
-</div>
      {% endfor %}
 	The discussion freezes at {{endtime}}
 

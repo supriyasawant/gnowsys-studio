@@ -31,7 +31,8 @@ border-radius: 5px;
         {% for each in child.authors.all %}
         	{% ifequal idusr admin_id %}
 <!-- If user is admin -->
-<div class="response_change" id="divchange" style="{% if child.get_object_bgcolor%}background:#{{ child.get_object_bgcolor}}{%endif%};">
+<div class="response_change" id="res{{child.id}}" style="{% if child.get_object_bgcolor%}background:#{{ child.get_object_bgcolor}}{%endif%};">
+<!--
 <script type="text/javascript">
 i = i+1;
 if (i%2 == 0)
@@ -49,9 +50,9 @@ document.forms["response"].submit();
 
 }
 </script>
+!-->
 
-
-<span style = "color:#{% if child.get_object_fontcolor %}{{ child.get_object_fontcolor}}{%else%}000000{%endif%};">{{each}}'s Response at {{child.creation_date}}
+<span style = "color:#{% if child.get_object_fontcolor %}{{ child.get_object_fontcolor}}{%else%}000000{%endif%};">{{each}}'s Response at {{child.creation_date}}<a href="#res{{child.id}}">Right Click to copy link</a>
 {% if child.rating.get_rating %}
 <h5>Current rating is {{ child.rating.get_rating }}<h5/>
 {% endif %}</span>
@@ -96,7 +97,8 @@ document.forms["response"].submit();
                 {% else %}
                         {% ifequal idusr each.id %}
 
-<div class="response_change" id="divchange" style="{% if child.get_object_bgcolor%}background:#{{ child.get_object_bgcolor}}{%endif%};">
+<div class="response_change" id="res{{child.id}}" style="{% if child.get_object_bgcolor%}background:#{{ child.get_object_bgcolor}}{%endif%};">
+<!--
 <script type="text/javascript">
 i = i+1;
 if (i%2 == 0)
@@ -107,8 +109,8 @@ else
 {
 document.getElementById("divchange").setAttribute("id","div2");
 }
-</script>
-<span style = "color:#{% if child.get_object_fontcolor %}{{ child.get_object_fontcolor}}{%else%}000000{%endif%};">{{each}}'s Response at {{child.creation_date}} <br/>
+</script>!-->
+<span style = "color:#{% if child.get_object_fontcolor %}{{ child.get_object_fontcolor}}{%else%}000000{%endif%};">{{each}}'s Response at {{child.creation_date}} <a href="#res{{child.id}}">Right Click to copy link</a> <br/>
 {% if child.rating.get_rating %}
 Current rating is {{ child.rating.get_rating }}</span><br/>
 {% endif %}
@@ -155,7 +157,8 @@ Current rating is {{ child.rating.get_rating }}</span><br/>
                         {% else %}
                                 {% ifequal attribute "true" %}
 
-<div class="response_change" id="divchange" style="{% if child.get_object_bgcolor%}background:#{{ child.get_object_bgcolor}}{%endif%};">
+<div class="response_change" id="res{{child.id}}" style="{% if child.get_object_bgcolor%}background:#{{ child.get_object_bgcolor}}{%endif%};" >
+<!--
 <script type="text/javascript">
 i = i+1;
 if (i%2 == 0)
@@ -166,8 +169,8 @@ else
 {
 document.getElementById("divchange").setAttribute("id","div2");
 }
-</script>
-<span style = "color:#{% if child.get_object_fontcolor %}{{ child.get_object_fontcolor}}{%else%}000000{%endif%};">{{each}}'s Response at {{child.creation_date}} <br/>
+</script>!-->
+<span style = "color:#{% if child.get_object_fontcolor %}{{ child.get_object_fontcolor}}{%else%}000000{%endif%};">{{each}}'s Response at {{child.creation_date}} <a href="#res{{child.id}}">Right Click to copy link</a><br/>
 {% if child.rating.get_rating %}
 Current rating is {{ child.rating.get_rating }}</span><br/>
 {% endif %}
@@ -231,7 +234,8 @@ Current rating is {{ child.rating.get_rating }}</span><br/>
 				
 				{% for authors in comment.authors.all %}
 				       {% ifequal authors.id idusr %}
-<div class="response_change" id="divchange" style="{% if child.get_object_bgcolor%}background:#{{ child.get_object_bgcolor}}{%endif%};">
+<div class="response_change" id="res{{child.id}}" style="{% if child.get_object_bgcolor%}background:#{{ child.get_object_bgcolor}}{%endif%};">
+<!--
 <script type="text/javascript">
 i = i+1;
 if (i%2 == 0)
@@ -242,8 +246,8 @@ else
 {
 document.getElementById("divchange").setAttribute("id","div2");
 }
-</script>
-<span style = "color:#{% if child.get_object_fontcolor %}{{ child.get_object_fontcolor}}{%else%}000000{%endif%};">{{each}}'s Response at {{child.creation_date}} <br/>
+</script>!-->
+<span style = "color:#{% if child.get_object_fontcolor %}{{ child.get_object_fontcolor}}{%else%}000000{%endif%};">{{each}}'s Response at {{child.creation_date}} <a href="#res{{child.id}}">Right Click to copy link</a><br/>
 {% if child.rating.get_rating %}
 Current rating is {{ child.rating.get_rating }}</span><br/>
 {% endif %}
