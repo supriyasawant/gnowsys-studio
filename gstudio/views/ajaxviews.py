@@ -639,6 +639,27 @@ def ajaxAddResponsesToTwist(request):
     variables = RequestContext(request, {'comment':twistobject , 'idusr' : int(userid), 'flag' : "True", 'admin_id' : admin_id , 'attribute' : attribute})
     template = "gstudio/tags/comment.html"
     return render_to_response(template,variables)
+#Ajax views for retriving comment for auto refresh in Loom>twist Response div                                                                 
+def ajaxResponseReciev(request):
+    userid = ''
+    admin_id = ''
+    twistid=""
+    attribute="true"
+    if request.is_ajax() and request.method =="POST":
+        twistid=request.POST['twistid']
+        userid=request.POST['userid']
+        admin_id =request.POST['admin_id']
+
+    twistobject = Gbobject.objects.get(id=int(twistid))
+    for each in twistobject.subject_of.all():
+        if each.attributetype.title == "release":
+            attribute = each.svalue
+            break
+    variables = RequestContext(request, {'comment':twistobject , 'idusr' : int(userid), 'flag' : "True", 'admin_id' : admin_id , 'attribute' :
+ attribute})
+    template = "gstudio/tags/comment.html"
+    return render_to_response(template,variables)
+
 def ajaxSendInvitation(request):
     userid = ''
     admin_id = ''
