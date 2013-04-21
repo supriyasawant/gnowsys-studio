@@ -38,4 +38,5 @@ urlpatterns = patterns('gstudio.views.ajaxviews',
 		       url(r'^userListForInvitation/$', 'ajaxuserListForInvitation', name='ajax_userListForInvitation'),
                        url(r'^sendInvitation/$', 'ajaxSendInvitation', name='ajax_SendInvitation'),
                        url(r'^releaseBlockResponseOfTwist/$', 'ajaxReleaseBlockResponseOfTwist', name='ajax_ReleaseBlockResponseOfTwist'),
+                       url(r'^ajaxResponseReciev/$', 'ajaxResponseReciev', name='ajax_ajaxResponseReciev')
                        )

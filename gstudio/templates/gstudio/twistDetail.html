@@ -58,6 +58,7 @@ $.ajax({
             	$(".submitdelete").show();
             	$(".rating").show();
 		isResponse=false;
+                document.getElementById("gnoweditor").style.visibility="hidden";
 		  }
 }); 
 }
@@ -95,7 +96,7 @@ $.ajax({
                 isSubResponse=false;
 		$('#response'+responseid).focus();
 		window.scroll($('#response'+responseid).offset().left,$('#response'+responseid).offset().top-250);
-
+                document.getElementById("gnoweditor").style.visibility="hidden";
 		  }
 });  
 }  
@@ -236,6 +237,36 @@ $.ajax({
 
 
 </script>
+<!-- script for to obtain response and refresh div !-->
+{% if user.is_authenticated %}
+<script type=text/javascript>
+setInterval(function () {
+    refreshCheck();
+}, 10000);
+function refreshCheck() {
+//alert("inside refresh check");
+    if (document.getElementById("gnoweditor").style.visibility!="visible" && (!$('.chkdel').is(':checked')) && (!$('.star').is(':checked')) )
+    {
+    //    alert("inside if");
+         updateMsg();
+    }
+}
+//setInterval(updateMsg, 5000);
+function updateMsg()
+{
+  //   alert("inside updatemsg");
+$.ajax({
+        url: '/gstudio/ajax/ajaxResponseReciev/',
+        type: 'POST',
+        data: {twistid:{{twist.id}},userid:{{user.id}},admin_id:{{admin_id}},csrfmiddlewaretoken: '{{ csrf_token }}' },
+        success: function(data){
+                $('#response'+{{twist.id}}).html(data);
+                checkeditor = 0;},});
+
+}
+</script>
+{% endif %}
+
 <h2><a href="/gstudio/group/gnowsys-grp/{{thread.id}}">{{thread.title}}</a>»{{twist.title}}</h2>
 <div id="twist{{ twist.id}}" class="divHide">
       		Posted on : {{twist.creation_date}}
