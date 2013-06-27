@@ -1,4 +1,3 @@
-
 {% extends "gstudio/base.html" %}
 {% load i18n comments gstudio_tags %} 
 {% load adminmedia grp_tags %}
@@ -12,9 +11,74 @@
 <style>
 <link href="{% admin_media_prefix %}css/base.css" rel="stylesheet" type="text/css" />
 <link rel="stylesheet" type="text/css" media="screen, projection" href="{{ STATIC_URL }}gstudio/css/screen.css" />
+
 </style>
-<script src="http://code.jquery.com/jquery-latest.js"></script>
-    <script type="text/javascript" >
+<style type="text/css">
+ 
+div.overlay {
+    background-image:url(/media/img/overlay/transparent.png);
+    color:#efefef;
+    height:450px;
+    display:none;
+  }
+  /* container for external content. uses vertical scrollbar, if needed */
+  div.contentWrap {
+    height:441px;
+    overflow-y:auto;
+  }
+</style>
+<script src="http://code.jquery.com/jquery-latest.js">
+var screenTop = $(document).scrollTop();
+</script>
+	 
+<script type="text/javascript">
+  
+  $.noConflict();
+
+  function previewtest(){
+  <!-- $("a[rel]").overlay({mask: '#000',effect:'apple'}); -->
+  if (isPreview){
+           alert("elms");
+	   var elmts = document.getElementsByClassName("preview");
+	   for (var i = 0; i < elmts.length; i++){
+	      elmts[i].setAttribute("value","preview");}
+	   }
+	   var org_data = $("#gnoweditor").val();
+	   var elmts = document.getElementsByClassName("reptext");
+	   var id= document.getElementById("ptitle").value;
+	   alert(id);
+	   var encode_data = encodeURIComponent(org_data);
+	   var decode_data = decodeURIComponent(encode_data.replace(/\+/g, " "));
+	   alert(decode_data);
+	   $.ajax({
+       	      url: '/gstudio/ajax/preview/',
+       	      data:{'orgcontent':decode_data,'id':id},
+	      beforeSend: function() {
+                               $("#ajax_load_image").show();
+                               
+			       $("#content").css({"opacity":"0.1",})
+			       
+                               },
+       			      
+			       success: function(data) {
+			       alert("inside ajax");
+			      <!--$("#preview23").css({"display":"block"});-->
+			      
+			       $("#preview23").show();
+			        
+			       $("#preview23").html(data);
+	     	<!-- $(".overlay").append(data);	        -->
+       	      },
+		complete: function(){
+		$("#a1").show();
+                $("#ajax_load_image").hide();
+		$("#content").css({"opacity":"",})
+			      
+	             }       
+              	  });
+      }
+
+
 var availableTags = [];
 var arr=[];
 var arr1=[];
@@ -26,6 +90,7 @@ var length = pagedrawer.length;
       $(window).load(function() {
    $("#content").css({
     "width": "600px",});
+  
    $("#graphcss").css({
     "margin-left": "450px",
     });});
@@ -39,7 +104,8 @@ $(window).load(function() {
  //$("#chart").hide();
  });
 $(window).load(function() {
- 
+ <!--$("a[rel]").overlay({mask: '#000',effect:'apple'}); -->
+			       
  $(".savepagecontent").hide();
  $("#saveseccontent").hide();
  $("#savesubsec").hide();
@@ -55,6 +121,24 @@ $(".savesubsec1").hide();
       "width": "600px",});
 
   });
+	
+<!-- $(function() { -->
+<!--        $("a[rel]").overlay({ -->
+       
+<!--        mask: 'darkred', -->
+<!--        effect: 'apple', -->
+<!--        onBeforeLoad: function() { -->
+       
+<!--        // grab wrapper element inside content -->
+<!--             var wrap = this.getOverlay().find(".contentWrap"); -->
+       
+<!--        // load the page specified in the trigger -->
+<!--        wrap.load("/tmp/beta/8686-supriya.html"); -->
+<!--        } -->
+ 
+<!--        }); -->
+<!-- }); -->
+
        $(document).on('click',"#lstvalue",function(){
 
 	
@@ -117,6 +201,63 @@ $(".savesubsec1").hide();
        });
 			      
 	 });
+			    $(document).on('click',"#pagedelete",function(){
+			    
+			    confirm("Delete Wikipage");
+			  
+			     var pageobj= document.getElementById("ptitle").value;
+			    $.ajax({
+			    url: '/gstudio/ajax/pagedelete/',
+			    data:{'pageobj':pageobj},
+			    beforeSend: function() {
+			    $("#ajax_load_image").show();
+                            
+			    $("#content").css({"opacity":"0.1",})
+			    },
+       			    
+			    success: function(data) {
+	 		    alert("sucess");
+			    
+			    },
+			    complete: function(){
+			    $("#ajax_load_image").hide();		      
+			    $("#content").css({"opacity":"",})
+			      
+			    }       
+			    
+			    });
+	
+
+});
+	
+	 $(document).on('click',"#status",function(){
+			    
+	$("#status").hide();		    
+	 var pageobj= document.getElementById("ptitle").value;
+	 alert(pageobj);
+	 $.ajax({
+	 url: '/gstudio/ajax/status/',
+	 data:{'pageobj':pageobj},
+	 beforeSend: function() {
+         $("#ajax_load_image").show();
+                            
+	 $("#content").css({"opacity":"0.1",})
+	  },
+       			      
+         success: function(data) {
+	 	 
+	 
+	 },
+         complete: function(){
+         $("#ajax_load_image").hide();		      
+         $("#content").css({"opacity":"",})
+			      
+	  }       
+	 
+	 });
+	 		    
+			    
+			    			});
 
          $(document).on('click',".htmlexport",function(){
 
@@ -169,10 +310,24 @@ $(".savesubsec1").hide();
 	 });
 </script>
 
-
 {% autopaginate section 1 %}
    <!-- <input type="button" value="Home" onClick="location.href='/gstudio/user/wikipage/{{user.username}}';"> -->
    <h1 style=""><font id="fonttitleid" >{{ page_ob.title }} </font> {% if user.is_authenticated %} {% edit_title page_ob.id page_ob.title %} {% endif %}</h1> 
+   {% if user.is_authenticated %}
+     {% if status %}
+  
+   <label id="status"><input type="checkbox">Public</label><br>
+     {% endif %}
+   {% for each1 in page_ob.authors.all %}
+	 
+	{% if each1 = user or is_staff %} 
+   <label id="pagedelete"><input type="checkbox">Delete</label><br>
+
+   
+	{% endif %}
+	{% endfor %}
+   {% endif %}
+
   Wikipage posted on : {{page_ob.creation_date}}
 		by {% for author in page_ob.authors.all %} 
    			{{author}}
@@ -191,10 +346,15 @@ $(".savesubsec1").hide();
    <font size="3"> 
                 {{page_ob_content}}</font>
    {% endwith %}
-	{% if user.is_authenticated %}
+
+
+<div class="overlay" id="overlay">
+ </div>
+  	{% if user.is_authenticated %}
 	<form method="post" action="">{% csrf_token %}
 	<input type="hidden" class="reptext" name="replytosection" id="sectionreply" style="visibility:hidden;"/></br>
 	<input type="hidden" class="editval" name="edit" value="empty"/>
+	<input type="hidden" class="preview" name="ispreview" value="empty" style="visibility:hidden;"/>
 	<input type="hidden" value="{{page_ob.id}}" name = "iden" id="ptitle">
 	<input type="hidden" value="{{page_ob.title}}">
 	<input type="hidden" value="{{collection}}" id="iscollection">
@@ -206,6 +366,10 @@ $(".savesubsec1").hide();
 	<input type="submit" class="pagedit" value="Submit"/>
        </form>
         {% endif %}
+
+	<div id="preview23" style="border: 2px solid gray; margin-top:screenTop; margin-left:515px;height: 400px;overflow: scroll;width:370px;display:none">
+	  <button id="a1">close</button>
+	</div>
 	<div id="coll">
 	  
 	    {% for each in test %}

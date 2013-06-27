@@ -267,12 +267,15 @@ def make_rep_object(replytext,auth_id,usr):
  new_ob.sites.add(Site.objects.get_current())
  return new_ob
 
-def edit_section(sec_id,title,usr):
+def edit_section(sec_id,title,usr,isPreview):
+ 
  new_ob = Gbobject.objects.get(id=int(sec_id))
  contorg = unicode(title)
  new_ob.content_org=contorg.encode('utf8')
  ssid=new_ob.get_ssid.pop()
  fname=str(ssid)+"-"+usr
+ boolean=False
+ boolean=isPreview
  ext='.org'
  html='.html'
  myfile = open(os.path.join(FILE_URL,fname+ext),'w')
@@ -293,17 +296,32 @@ def edit_section(sec_id,title,usr):
  myfile = open(os.path.join(FILE_URL,fname+ext),'r')
  
  stdout = os.popen("%s %s %s"%(PYSCRIPT_URL_GSTUDIO,fname+ext,FILE_URL))
+ 
  output = stdout.read()
+ # if boolean:
+     
+ #     os.system("firefox /tmp/beta/%s"%(fname+html))
+ #     data = open(os.path.join(FILE_URL,fname+html))
+ #     data1 = data.readlines()
+ #     data2 = data1[86:]
+ #     dataa = data2[data2.index('<div id="content">\n')]='<div id=" "\n'
+ #     data3 = data2[:-6]
+ #     newdata=""
+ #     for line in data3:
+ #         newdata += line.lstrip()
+ #     print newdata
+
+# else:
  data = open(os.path.join(FILE_URL,fname+html))
  data1 = data.readlines()
- data2 = data1[107:]
+ data2 = data1[86:]
  dataa = data2[data2.index('<div id="content">\n')]='<div id=" "\n'
  data3 = data2[:-6]
  newdata=""
  for line in data3:
-        newdata += line.lstrip()
- new_ob.content = newdata
- new_ob.save()
+     newdata += line.lstrip()
+     new_ob.content = newdata
+     new_ob.save()
  return True
 
 
@@ -539,13 +557,16 @@ def create_meeting(title,idusr,content,usr):
  sys1.sites.add(Site.objects.get_current())
  return sys.id 
 
-def create_wikipage(title,idusr,content_org,usr,collection,list1):
+def create_wikipage(title,idusr,content_org,usr,collection,list1,status):
  sys = System()
  sys.title = title
- sys.status = 2
+ if status:
+     sys.status = 1
+ else:
+     sys.status = 2
  boolean=False
  boolean=collection
- 
+
  list1=list1.split(",")
  contorg =content_org
  contorg=urllib.unquote_plus(contorg)
@@ -576,7 +597,7 @@ def create_wikipage(title,idusr,content_org,usr,collection,list1):
  output = stdout.read()
  data = open(os.path.join(FILE_URL,fname+html))
  data1 = data.readlines()
- data2 = data1[107:]
+ data2 = data1[86:]
  dataa = data2[data2.index('<div id="content">\n')]='<div id=" "\n'
  data3 = data2[:-6]
  newdata=""

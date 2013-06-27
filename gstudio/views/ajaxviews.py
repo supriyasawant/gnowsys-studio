@@ -701,6 +701,47 @@ def ajaxuserListForInvitation(request):
         userListJson = json.dumps(userlist)
     return HttpResponse(userListJson)
 
+def Preview(request):
+    title=request.GET["orgcontent"]
+    sec_id=request.GET["id"]
+    
+    new_ob = Gbobject.objects.get(id=int(sec_id))
+    contorg = unicode(title)
+    new_ob.content_org=contorg.encode('utf8')
+    ssid=new_ob.get_ssid.pop()
+    fname=str(ssid)+"-"
+    ext='.org'
+    html='.html'
+    myfile = open(os.path.join(FILE_URL,fname+ext),'w')
+    myfile.write(new_ob.content_org)
+    myfile.close()
+    myfile = open(os.path.join(FILE_URL,fname+ext),'r')
+    rfile=myfile.readlines()
+    scontent="".join(rfile)
+    newcontent=scontent.replace("\r","")
+    myfile = open(os.path.join(FILE_URL,fname+ext),'w')
+    myfile.write(newcontent)
+    myfile = open(os.path.join(FILE_URL,fname+ext),'a')
+    myfile.write("\n#+OPTIONS: timestamp:nil author:nil creator:nil  H:3 num:nil toc:nil @:t ::t |:t ^:t -:t f:t *:t <:t")
+    myfile.write("\n#+TITLE: ")
+ 
+    myfile = open(os.path.join(FILE_URL,fname+ext),'r')
+ 
+    stdout = os.popen("%s %s %s"%(PYSCRIPT_URL_GSTUDIO,fname+ext,FILE_URL))
+ 
+    output = stdout.read()
+    data = open(os.path.join(FILE_URL,fname+html))
+    data1 = data.readlines()
+    data2 = data1[86:]
+    dataa = data2[data2.index('<div id="content">\n')]='<div id=" "\n'
+    data3 = data2[:-6]
+    newdata=""
+    for line in data3:
+        newdata += line.lstrip()
+    print newdata
+    return HttpResponse(newdata)
+
+
 def ajaxReleaseBlockResponseOfTwist(request):
     threadTwistid = ""
     twistActivity = ""
@@ -736,9 +777,20 @@ def ajaxReleaseBlockResponseOfTwist(request):
     return HttpResponse("sucess")
 	
                     
+def Status(request):
+    page_ob=request.GET["pageobj"]
+    sys=System.objects.get(id=page_ob)
+    sys.status = 2
+    sys.save()
+    return HttpResponse("sucess")
                 
-                
-
+def Pagedelete(request):
+    page_ob=request.GET["pageobj"]
+    sys=System.objects.get(id=page_ob)
+    sys.delete()
+    
+    return HttpResponseRedirect("/gstudio/user/wikipage")
+    
             
 
 

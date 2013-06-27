@@ -216,7 +216,7 @@ jQuery(document).ready(function($) {
 
   });
 
- $.noConflict();
+ // $.noConflict();
   jQuery(document).ready(function($) {
       $("#topicaddcontent").one("click",function() {
 	  isTwist=true;
